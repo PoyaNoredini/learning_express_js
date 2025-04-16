@@ -26,7 +26,7 @@ catch(err){
 exports.getTour = async (req , res) => {
 
     try{
-      const tour =  await Tour.findById(req.pramas.id);
+      const tour =  await Tour.findById(req.params.id );
       // find one tour
       res.status(200).json({
         status: 'success',
