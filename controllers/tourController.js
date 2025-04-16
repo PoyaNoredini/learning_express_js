@@ -15,8 +15,11 @@ try{
     queryStr = queryStr.replace(/\b( gte|gt|lte|lt)\b/g, match =>`$ ${match}`);
     console.log(JSON.parse(queryStr));
 
-    const tours =  await Tour.find(queryObj);
-    
+    let tours =  await Tour.find(queryObj);
+
+    if(req.query.sort){
+        query = query.sort(req.query.sort);
+    }
         res.status(200).json({
             status: 'success',
             result : tours.length,
