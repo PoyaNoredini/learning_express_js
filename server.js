@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
 
 const app = require('./app');
+const { urlencoded } = require('body-parser');
 
 const DB = process.env.DATABASE.replace(
     'PASSWORD', 
@@ -18,6 +19,8 @@ mongoose.connect(DB)
   });
 
 const port = process.env.PORT || 3000; // Note: PORT is now uppercase to match your env file
+// console.log(URL)
+
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });

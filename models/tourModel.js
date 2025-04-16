@@ -22,4 +22,4 @@ const  tourSchema  = new mongoose.Schema({
 
 
 
-module.export = Tour;
+  module.exports = Tour;
