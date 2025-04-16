@@ -10,10 +10,13 @@ try{
     const excludeFieleds=['page' , 'sort' , 'limit' , 'fields'];
     excludeFieleds.forEach(el => delete queryObj[el]);
 
-    console.log(queryObj);
-    
+    // advanced fillter 
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b( gte|gt|lte|lt)\b/g, match =>`$ ${match}`);
+    console.log(JSON.parse(queryStr));
+
     const tours =  await Tour.find(queryObj);
-        
+    
         res.status(200).json({
             status: 'success',
             result : tours.length,
@@ -25,7 +28,7 @@ try{
 catch(err){
     res.status(404).json({
         status : 'fail',
-        message : err 
+        message : err.message
     });
     
 }
