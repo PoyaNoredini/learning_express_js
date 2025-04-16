@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
 
 const app = require('./app');
-const { urlencoded } = require('body-parser');
 
 const DB = process.env.DATABASE.replace(
     'PASSWORD', 
