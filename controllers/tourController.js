@@ -1,25 +1,25 @@
 
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('./../utils/apifeatures');
+exports.aliasTopTours = (req ,res , next) => {
+    req.query.limit = '5';
+    req.query.sort = '-ratingsAverage , price';
+    req.query.fields = 'name , price , ratingsAverage , summary , difficulty';
+    next();
+}
 
 
 exports.getAllTours =   async (req , res) => {
 
 try{
 
-    const queryObj = {...req.query};
-    const excludeFieleds=['page' , 'sort' , 'limit' , 'fields'];
-    excludeFieleds.forEach(el => delete queryObj[el]);
+    const features = new APIFeatures(Tour.find() , req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+    const Tour = await features.query;
 
-    // advanced fillter 
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b( gte|gt|lte|lt)\b/g, match =>`$ ${match}`);
-    console.log(JSON.parse(queryStr));
-
-    let tours =  await Tour.find(queryObj);
-
-    if(req.query.sort){
-        query = query.sort(req.query.sort);
-    }
         res.status(200).json({
             status: 'success',
             result : tours.length,
@@ -114,3 +114,43 @@ exports.deleteTour = async (req , res) => {
         data: null
     });
 }
+
+// calculation data
+ 
+ exports.getTourStats = async (req , res) => {
+    try {
+const  stats = await Tour.aggregate([
+{
+    $match: { ratingsAverage: { $gte: 4.5 } }
+},
+{
+    $group: {
+        _id:null,  
+        num:{$sum : 1},
+        numRating :{$sum: '$ratingsQuantity'},
+        avgRating: { $avg: '$ratingsAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' }
+    }
+    
+},
+    {
+        $sort:{avgPrice: 1}
+    }
+
+]);
+
+res.status(200).json({
+    status: 'success',
+    data: {
+        stats: stats
+    }
+});
+    }catch(err){
+        res.status(400).json({
+            status: 'fail',
+            message: 'invalid data sent'
+        });
+    }
+ }
