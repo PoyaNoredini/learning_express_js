@@ -187,7 +187,6 @@ res.status(200).json({
             },
             {
                 sort:{numberTourStarts:-1 } 
-
             },
             {
                 $limit: 12
