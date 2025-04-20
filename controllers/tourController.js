@@ -176,7 +176,22 @@ res.status(200).json({
                     numTourStart: { $sum : 1},
                     tours:{$push: '$name'}, 
                 }
-            }
+            },
+            {
+                $addFields : {$month : '$_id'}
+            },
+            {
+                $project: { 
+                    _id: 0
+                }
+            },
+            {
+                sort:{numberTourStarts:-1 } 
+
+            },
+            {
+                $limit: 12
+            },
         ]);
         
         res.status(200).json({
