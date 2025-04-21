@@ -10,8 +10,8 @@ exports.aliasTopTours = (req ,res , next) => {
 }
 
 
-exports.getAllTours = async (req, res) => {
-    try {
+exports.getAllTours = catchAsync(async (req, res) => {
+  
       const features = new APIFeatures(Tour.find(), req.query)
         .filter()
         .sort()
@@ -27,17 +27,11 @@ exports.getAllTours = async (req, res) => {
           tours: tours
         }
       });
-    } catch (err) {
-      res.status(404).json({
-        status: 'fail',
-        message: err.message
-      });
-    }
-  };
-  
-exports.getTour = async (req , res) => {
 
-    try{
+  });
+  
+exports.getTour =catchAsync( async (req , res) => {
+
       const tour =  await Tour.findById(req.params.id );
       // find one tour
       res.status(200).json({
@@ -45,17 +39,8 @@ exports.getTour = async (req , res) => {
         data: {
             tour: tour
         }
-    });
-    }catch(err){
-        res.status(404).json({
-            status : 'fail',
-            message : err 
-        }); 
-    }
-    const id = req.params.id;
-    console.log(id);
-     
-}
+    });     
+});
 
 
 exports.createTour = catchAsync( async (req, res) => {
@@ -68,8 +53,7 @@ exports.createTour = catchAsync( async (req, res) => {
 
   });
 
-exports.updateTour = async (req , res) => {
-    try{
+exports.updateTour = catchAsync(async (req , res) => {
     const tour = await Tour.findByIdAndUpdate(req.params.id , req.body ,{
         new : true,
         runValidators : true
@@ -80,35 +64,24 @@ exports.updateTour = async (req , res) => {
             tour: tour
         }
     });
-    }catch(err){
-        res.status(400).json({
-            status: 'fail',
-            message: 'invalid data sent'
-        });
-    }
-}
+    
+});
 
-exports.deleteTour = async (req , res) => {
-    try{
+exports.deleteTour = catchAs(async (req , res) => {
+
      await Tour.findByIdAndDelete(req.params.id);
      res.status(200).json({
         status: 'success',
         message: 'delete success'
     });
-    }catch(err){
-        res.status(400).json({
-            status: 'fail',
-            message: 'invalid data sent'
-        });
-    }
-    
+
 
     console.log(id);
     res.status(204).json({ 
         status: 'success',
         data: null
     });
-}
+});
 
 // calculation data
  
