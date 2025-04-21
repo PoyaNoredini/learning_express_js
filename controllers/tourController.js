@@ -85,8 +85,8 @@ exports.deleteTour = catchAs(async (req , res) => {
 
 // calculation data
  
- exports.getTourStats = async (req , res) => {
-    try {
+ exports.getTourStats = catchAsync(async (req , res) => {
+
 const  stats = await Tour.aggregate([
 {
     $match: { ratingsAverage: { $gte: 4.5 } }
@@ -115,16 +115,11 @@ res.status(200).json({
         stats: stats
     }
 });
-    }catch(err){
-        res.status(400).json({
-            status: 'fail',
-            message: 'invalid data sent'
-        });
-    }
- }
 
- exports.getMonthlyPlan = async (req , res) => {
-    try{
+ });
+ 
+ exports.getMonthlyPlan =catchAsync( async (req , res) => {
+  
         const year = req.params.year * 1 ;  //2021
         const plan = await Tour.aggregate([
             {
@@ -168,10 +163,4 @@ res.status(200).json({
             }
         });
 
-    }catch(err){
-        res.status(400).json({
-            status: 'fail',
-            message: 'invalid data sent'
-        });
-    }
- }
+ });
