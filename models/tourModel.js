@@ -123,7 +123,8 @@ tourSchema.post(/^find/ , function(doc , next){
 });
 // aggregation middleware
 tourSchema.pre('aggregate', function(next) {
-this.pipline().unshift({  $match : { secretTour : {$ne : true}}})
+  // Fix: Change pipline to pipeline
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   next();
 });
 
